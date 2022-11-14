@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\spenc\\Desktop\\Projects\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj": {}
+    "C:\\Users\\spenc\\Source\\Repos\\JCSpen\\VehicleRentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj": {}
   },
   "projects": {
-    "C:\\Users\\spenc\\Desktop\\Projects\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj": {
+    "C:\\Users\\spenc\\Source\\Repos\\JCSpen\\VehicleRentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\spenc\\Desktop\\Projects\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj",
+        "projectUniqueName": "C:\\Users\\spenc\\Source\\Repos\\JCSpen\\VehicleRentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj",
         "projectName": "RentalSystem",
-        "projectPath": "C:\\Users\\spenc\\Desktop\\Projects\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj",
+        "projectPath": "C:\\Users\\spenc\\Source\\Repos\\JCSpen\\VehicleRentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem.csproj",
         "packagesPath": "C:\\Users\\spenc\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\spenc\\Desktop\\Projects\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\obj\\",
+        "outputPath": "C:\\Users\\spenc\\Source\\Repos\\JCSpen\\VehicleRentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\RentalSystem\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

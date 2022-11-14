@@ -28,11 +28,16 @@ namespace RentalSystem
 
         private void AdminSubmitBtn_Click(object sender, EventArgs e)
         {
+            int n;
             if (ClearanceKeyBox.Text.ToLower() == "admin")
             {
                 if (MakeBox.Text == "" || ModelBox.Text == "" || RegBox.Text == "" || MileageBox.Text == "" || PriceBox.Text == "")
                 {
                     MessageBox.Show("Please fill out all boxes before submitting");
+                }
+                else if(!int.TryParse(MileageBox.Text, out n) || !int.TryParse(PriceBox.Text, out n))
+                {
+                    MessageBox.Show("Please use correct data types!");
                 }
                 else
                 { 
@@ -79,7 +84,7 @@ namespace RentalSystem
                 }
             }
             else
-            if (MoreInfoCheckBox.Checked || RentBox.Checked && RemoveBox.Checked == false)
+            if (MoreInfoCheckBox.Checked || RentBox.Checked || ReturnCheckBox.Checked && RemoveBox.Checked == false)
             {
                 if (MoreInfoCheckBox.Checked && RentBox.Checked)
                 {
@@ -112,6 +117,18 @@ namespace RentalSystem
                                 RentStatus = "This Vehicle is currently available!";
                             }
                             MessageBox.Show(RentStatus + "\n" + "Vehicle ID: " + CurrentUser.UserVehicle.ID + "\n" + "Vehicle Make: " + CurrentUser.UserVehicle.Make + "\n" + "Vehicle Model: " + CurrentUser.UserVehicle.Model + "\n" + "Vehicle Mileage: " + CurrentUser.UserVehicle.Mileage + "\n" + "Price to rent per week (£): " + CurrentUser.UserVehicle.Price + "\n" + "Vehicle Registration: " + CurrentUser.UserVehicle.Registration + "\n");
+                        }
+                        else if(ReturnCheckBox.Checked && !LockOut)
+                        {
+                            bool CurrentRentee = Controller.ReturnVehicle(int.Parse(VehicleIDBox.Text));
+                            if (CurrentRentee)
+                            { 
+                                MessageBox.Show("Thank you for returning this vehicle!");
+                            }
+                            else
+                            {
+                                MessageBox.Show("You are not currently renting this vehicle!");
+                            }
                         }
                         else
                         {

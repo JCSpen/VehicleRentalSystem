@@ -143,6 +143,20 @@ public class DataController
         return true;
     }
 
+    public bool ReturnVehicle(int ID)
+    {
+        string query = "UPDATE Vehicle SET CurrentRentee = 'None' WHERE ID = " + ID + ";";
+        if (Scout.ValueExists(query))
+        {
+            Connection.Open();
+            OleDbCommand Command = new OleDbCommand(query, Connection);
+            Command.ExecuteNonQuery();
+            Connection.Close();
+            return true;
+        }
+        return false;
+    }
+
     public bool CheckRentalStatus(int ID)
     {
         string query = "SELECT CurrentRentee FROM Vehicle WHERE(ID = " + ID + ");";
