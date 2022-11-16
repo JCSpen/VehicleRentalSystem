@@ -120,7 +120,7 @@ namespace RentalSystem
                         }
                         else if(ReturnCheckBox.Checked && !LockOut)
                         {
-                            bool CurrentRentee = Controller.ReturnVehicle(int.Parse(VehicleIDBox.Text));
+                            bool CurrentRentee = Controller.ReturnVehicle(int.Parse(VehicleIDBox.Text),CurrentUser.Username);
                             if (CurrentRentee)
                             { 
                                 MessageBox.Show("Thank you for returning this vehicle!");

@@ -22,7 +22,7 @@ namespace RentalSystem
         {
             if(CurrentUser.NewUser)
             {
-                if (UsernameBox != null && !(Controller.SearchByValue(UsernameBox.Text, "Users", "Username")))
+                if (UsernameBox != null && Controller.FindUserID(UsernameBox.Text,"Username") != 0)
                 {
                     if(PasswordBox.Text == PasswordRegBox.Text || BoxSwitch)
                     {

@@ -10,91 +10,59 @@ using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Data;
 using System.Drawing;
 using System.Collections;
+using Microsoft.VisualBasic.ApplicationServices;
+using static System.ComponentModel.Design.ObjectSelectorEditor;
+using System.Windows.Forms;
 
 public class DataController
+{
+    protected static string DataSource = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= " + Application.StartupPath + @"\MightyMotorsDB.accdb";
+    protected DataTable Table = new DataTable();
+    protected OleDbConnection Connection = new OleDbConnection(DataSource);
+    public void CreateUser(string Username, string Password, string FirstName, string LastName, string Insurance, int ID)
     {
-    static string DataSource = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= " + Application.StartupPath + @"\MightyMotorsDB.accdb";
-    public DataTable Table = new DataTable();
-    public OleDbConnection Connection = new OleDbConnection(DataSource);
-    Visionairy Scout = new Visionairy();
-
-    public bool SearchByValue(string Value,string Table, string Column)
-    {
-        string Query = "SELECT " + Column + " FROM " + Table + " WHERE(" + Column + " = '" + Value + "');";
-        return Scout.ValueExists(Query);
-    }
-    public void CreateUser(string Username,string Password, string FirstName, string LastName, string Insurance, int ID)
-    {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = "INSERT INTO Users([ID],Username,[Password],FirstName,LastName,InsuranceProvider) VALUES(" + ID + ",'" + Username + "','" + Password + "','" + FirstName + "','" + LastName + "','" + Insurance + "');";
-        Command.Connection = Connection;
-        Command.ExecuteNonQuery();
-        Connection.Close();
+        ExecuteNonQueryType("INSERT INTO Users([ID],Username,[Password],FirstName,LastName,InsuranceProvider) VALUES(" + ID + ",'" + Username + "','" + Password + "','" + FirstName + "','" + LastName + "','" + Insurance + "');");
     }
 
     public void CreateVehicle(string Make, string Model, string Reg, int Mileage, double Price, int ID)
     {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = "INSERT INTO Vehicle([ID],Make,Model,Registration,Mileage,Price,CurrentRentee) VALUES(" + ID + ",'" + Make + "','" + Model + "','" + Reg + "'," + Mileage + "," + Price + ",'None');";
-        Command.Connection = Connection;
-        Command.ExecuteNonQuery();
-        Connection.Close();
+        ExecuteNonQueryType("INSERT INTO Vehicle([ID],Make,Model,Registration,Mileage,Price,CurrentRentee) VALUES(" + ID + ",'" + Make + "','" + Model + "','" + Reg + "'," + Mileage + "," + Price + ",'None');");
     }
 
     public int FindUserID(string Username, string Password)
     {
-        if (Scout.ValueExists("SELECT Username FROM Users WHERE(Username = '" + Username + "' AND[Password] = '" + Password + "');"))
-        {
-            OleDbCommand Command = new OleDbCommand(DataSource);
-            Connection.Open();
-            Command.CommandText = "SELECT ID FROM Users WHERE(Username = '" + Username + "' AND [Password] = '" + Password + "');";
-            Command.Connection = Connection;
-            Command.CommandType = CommandType.Text;
-            int getresult = (int)Command.ExecuteScalar();
-            int result = getresult;
-            Connection.Close();
-            return result;
-        }
-        return 0;
+        return int.Parse(ExecuteNewQuery("SELECT ID FROM Users WHERE(Username = '" + Username + "' AND [Password] = '" + Password + "');"));
     }
 
     public string FindFirstname(int ID)
     {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = "SELECT Firstname FROM Users WHERE(ID = " + ID + ");";
-        Command.Connection = Connection;
-        Command.CommandType = CommandType.Text;
-        string result = (string)Command.ExecuteScalar();
-        Connection.Close();
-        return result;
+        return ExecuteNewQuery("SELECT Firstname FROM Users WHERE(ID = " + ID + ");");
     }
 
     public string FindLastname(int ID)
     {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = "SELECT Lastname FROM Users WHERE(ID = " + ID + ");";
-        Command.Connection = Connection;
-        Command.CommandType = CommandType.Text;
-        string result = (string)Command.ExecuteScalar();
-        Connection.Close();
-        return result;
+        return ExecuteNewQuery("SELECT Lastname FROM Users WHERE(ID = " + ID + ");");
     }
     public string FindInsuraceInfo(int ID)
     {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = "SELECT InsuranceProvider FROM Users WHERE(ID = " + ID + ");";
-        Command.Connection = Connection;
-        Command.CommandType = CommandType.Text;
-        string result = (string)Command.ExecuteScalar();
-        Connection.Close();
-        return result;
+        return ExecuteNewQuery("SELECT InsuranceProvider FROM Users WHERE(ID = " + ID.ToString() + ");");
+    }
+    public string ExecuteNewQuery(string Query)
+    {
+        DataQuery NewQuery = new DataQuery(Query);
+        return NewQuery.GetResult();
     }
 
+    public void ExecuteNonQueryType(string Query)
+    {
+        DataQuery NewQuery = new DataQuery(Query);
+        NewQuery.NonQuery();
+    }
+
+    public string FindVehicleID(int ID)
+    {
+        return ExecuteNewQuery("SELECT ID FROM Vehicle WHERE(ID = " + ID + ");");
+    }
     public void FillTable(DataGridView ListingViewer)
     {
         Table.Clear();
@@ -115,7 +83,7 @@ public class DataController
     public string[] FetchVehicleData(int ID)
     {
         string query = "SELECT * FROM Vehicle WHERE(ID = " + ID + ");";
-        if (Scout.ValueExists(query))
+        if (FindVehicleID(ID) != "0")
         {
             string[] Contents = new string[Table.Columns.Count];
             Table.Clear();
@@ -135,37 +103,30 @@ public class DataController
 
     public bool RentVehicle(int ID, string Username)
     {
-        string query = "UPDATE Vehicle SET CurrentRentee = '" + Username + "' WHERE ID = " + ID + ";";
-        Connection.Open();
-        OleDbCommand Command = new OleDbCommand(query, Connection);
-        Command.ExecuteNonQuery();
-        Connection.Close();
+        ExecuteNonQueryType("UPDATE Vehicle SET CurrentRentee = '" + Username + "' WHERE ID = " + ID + ";");
         return true;
     }
 
-    public bool ReturnVehicle(int ID)
+    public bool ReturnVehicle(int ID, string Username)
     {
-        string query = "UPDATE Vehicle SET CurrentRentee = 'None' WHERE ID = " + ID + ";";
-        if (Scout.ValueExists(query))
+        if (FindVehicleID(ID) != "0" && Username == FindRentee(ID))
         {
-            Connection.Open();
-            OleDbCommand Command = new OleDbCommand(query, Connection);
-            Command.ExecuteNonQuery();
-            Connection.Close();
+            ExecuteNonQueryType("UPDATE Vehicle SET CurrentRentee = 'None' WHERE ID = " + ID + ";");
             return true;
         }
         return false;
     }
 
+    public string FindRentee(int ID)
+    {
+        return ExecuteNewQuery("SELECT CurrentRentee FROM Vehicle WHERE (ID = " + ID + ");");
+    }
+
     public bool CheckRentalStatus(int ID)
     {
-        string query = "SELECT CurrentRentee FROM Vehicle WHERE(ID = " + ID + ");";
-        Connection.Open();
-        OleDbCommand Command = new OleDbCommand(query, Connection);
-        string result = Command.ExecuteScalar().ToString();
-        Connection.Close();
+        string result = ExecuteNewQuery("SELECT CurrentRentee FROM Vehicle WHERE(ID = " + ID + ");");
         if (result != "None")
-        { 
+        {
             return true;
         }
         return false;
@@ -173,47 +134,14 @@ public class DataController
 
     public void RemoveRow(int ID)
     {
-        string query = "DELETE FROM Vehicle WHERE(ID = " + ID + ");";
-        Connection.Open();
-        OleDbCommand Command = new OleDbCommand(query, Connection);
-        Command.ExecuteNonQuery();
-        Connection.Close();
+        ExecuteNonQueryType("DELETE FROM Vehicle WHERE(ID = " + ID + ");");
     }
-
+}
 
 
    
 
-    private class Visionairy
-    {
-        string DataSource = DataController.DataSource;
-            public bool ValueExists(string Query)
-            {
-                int? QueryResultException = null;
-                string? QueryResult = null;
-                OleDbCommand Command = new OleDbCommand();
-                OleDbConnection Connection = new OleDbConnection(DataSource);
-                Connection.Open();
-                Command.Connection = Connection;
-                Command.CommandText = Query;
-            try
-            {
-                QueryResult = (string?)Command.ExecuteScalar();
-            }
-            catch
-            {
-                QueryResultException = (int?)Command.ExecuteScalar();
-            }
-                if(QueryResult != null || QueryResultException != null)
-            {
-                Connection.Close();
-                return true;
-            }
-                Connection.Close();
-                return false;
-            }
-        }
-    }
+
 
 
 
