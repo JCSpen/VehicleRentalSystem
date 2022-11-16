@@ -21,11 +21,7 @@ public class DataQuery : DataController
 
     protected void ExecuteQuery()
     {
-        OleDbCommand Command = new OleDbCommand(DataSource);
-        Connection.Open();
-        Command.CommandText = Query;
-        Command.Connection = Connection;
-        Command.CommandType = CommandType.Text;
+        OleDbCommand Command = GetCommand();
         try
         {
             QueryResult = (string?)Command.ExecuteScalar();
@@ -37,13 +33,19 @@ public class DataQuery : DataController
         Connection.Close();
     }
 
-    public void NonQuery()
+    private OleDbCommand GetCommand()
     {
         OleDbCommand Command = new OleDbCommand(DataSource);
         Connection.Open();
         Command.CommandText = Query;
         Command.Connection = Connection;
         Command.CommandType = CommandType.Text;
+        return Command;
+    }
+
+    public void NonQuery()
+    {
+        OleDbCommand Command = GetCommand();
         Command.ExecuteNonQuery();
         Connection.Close();
     }
