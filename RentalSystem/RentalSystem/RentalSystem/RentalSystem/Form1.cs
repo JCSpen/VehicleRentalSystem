@@ -22,7 +22,7 @@ namespace RentalSystem
         {
             if(CurrentUser.NewUser)
             {
-                if (UsernameBox != null && Controller.FindUserID(UsernameBox.Text,"Username") != 0)
+                if (UsernameBox.Text != "" && Controller.FindUserID(UsernameBox.Text,"Username") == 0)
                 {
                     if(PasswordBox.Text == PasswordRegBox.Text || BoxSwitch)
                     {
@@ -35,7 +35,9 @@ namespace RentalSystem
                             UsernameBox.PlaceholderText = "First Name";
                             PasswordBox.Clear();
                             PasswordBox.PlaceholderText = "Last Name";
+                            PasswordBox.PasswordChar = '\0';
                             PasswordRegBox.Clear();
+                            PasswordRegBox.PasswordChar = '\0';
                             PasswordRegBox.PlaceholderText = "Insurance Provider";
                             BoxSwitch = true;
                         }
