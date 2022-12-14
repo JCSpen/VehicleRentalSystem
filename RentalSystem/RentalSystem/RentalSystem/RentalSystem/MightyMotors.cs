@@ -13,7 +13,9 @@ namespace RentalSystem
 {
     public partial class MightyMotors : Form
     {
+        //Data Controlling Class
         public DataController Controller = new DataController();
+        //Local instance of the User
         public User CurrentUser { get; set; }
         public MightyMotors(User CurrentUser)
         {
@@ -23,34 +25,35 @@ namespace RentalSystem
 
         private void MightyMotors_Load(object sender, EventArgs e)
         {
+            //Displays all Vehicles in the database
             Controller.FillTable(TableView);
         }
 
         private void AdminSubmitBtn_Click(object sender, EventArgs e)
         {
             int n;
-            if (ClearanceKeyBox.Text.ToLower() == "admin")
+            if (ClearanceKeyBox.Text.ToLower() == "admin") //Checks for admin key
             {
-                if (MakeBox.Text == "" || ModelBox.Text == "" || RegBox.Text == "" || MileageBox.Text == "" || PriceBox.Text == "")
+                if (MakeBox.Text == "" || ModelBox.Text == "" || RegBox.Text == "" || MileageBox.Text == "" || PriceBox.Text == "") //Makes sure boxes aren't empty
                 {
                     MessageBox.Show("Please fill out all boxes before submitting");
                 }
-                else if(!int.TryParse(MileageBox.Text, out n) || !int.TryParse(PriceBox.Text, out n))
+                else if(!int.TryParse(MileageBox.Text, out n) || !int.TryParse(PriceBox.Text, out n)) //Makes sure correct data types are used
                 {
                     MessageBox.Show("Please use correct data types!");
                 }
                 else
                 { 
-                    Controller.CreateVehicle(MakeBox.Text, ModelBox.Text, RegBox.Text, int.Parse(MileageBox.Text), int.Parse(PriceBox.Text), GenerateID());
+                    Controller.CreateVehicle(MakeBox.Text, ModelBox.Text, RegBox.Text, int.Parse(MileageBox.Text), int.Parse(PriceBox.Text), GenerateID()); //Creates new vehicle
                 }
             }
             else
             {
-                MessageBox.Show("Clearance Key is Invalid!");
+                MessageBox.Show("Clearance Key is Invalid!"); //Flags incorrect admin key
             }
         }
 
-        public int GenerateID()
+        public int GenerateID() //Randomly generates a new ID number
         {
             Random RNG = new Random();
             string Output = "";
@@ -58,12 +61,12 @@ namespace RentalSystem
             {
                 Output = Output + RNG.Next(0, 9).ToString();
             }
-            return int.Parse(Output);
+            return int.Parse(Output); //Returns the generated ID number
         }
 
         private void RefreshBtn_Click(object sender, EventArgs e)
         {
-            Controller.FillTable(TableView);
+            Controller.FillTable(TableView); //Refreshes the table
         }
 
         private void IDBtn_Click(object sender, EventArgs e)
@@ -71,38 +74,38 @@ namespace RentalSystem
             int Exception;
             string[] VehicleData = new string[7];
             bool LockOut = false;
-            if (RemoveBox.Checked && RemoveKeyBox.Text == "Admin")
+            if (RemoveBox.Checked && RemoveKeyBox.Text == "Admin") //Checks for admin key
             {
-                if (int.TryParse(VehicleIDBox.Text, out Exception))
+                if (int.TryParse(VehicleIDBox.Text, out Exception)) //Checks if ID box has an integer input
                 {
-                    Controller.RemoveRow(int.Parse(VehicleIDBox.Text));
+                    Controller.RemoveRow(int.Parse(VehicleIDBox.Text)); //Removes Vehicle from the System
                     MessageBox.Show("Admin authorised Vehicle has been removed from the system!");
                 }
                 else
                 {
-                    MessageBox.Show("NON INTEGER CHARACTER DETECTED PLEASE TRY AGAIN!");
+                    MessageBox.Show("NON INTEGER CHARACTER DETECTED PLEASE TRY AGAIN!"); //Flags incorrect data types
                 }
             }
             else
-            if (MoreInfoCheckBox.Checked || RentBox.Checked || ReturnCheckBox.Checked && RemoveBox.Checked == false)
+            if (MoreInfoCheckBox.Checked || RentBox.Checked || ReturnCheckBox.Checked && RemoveBox.Checked == false) 
             {
-                if (MoreInfoCheckBox.Checked && RentBox.Checked)
+                if (MoreInfoCheckBox.Checked && RentBox.Checked) //Ensures more than one box is not ticked
                 {
                     MessageBox.Show("Please only tick one box");
                 }
                 else
                 {
-                    if (int.TryParse(VehicleIDBox.Text, out Exception))
+                    if (int.TryParse(VehicleIDBox.Text, out Exception)) //Ensures integer valye
                     {
                         VehicleData = Controller.FetchVehicleData(int.Parse(VehicleIDBox.Text));
 
-                        if (VehicleData != null)
+                        if (VehicleData != null) //Checks if vehicle searched exists
                         {
                             CurrentUser.UserVehicle.SetVehicleData(VehicleData, Controller);
                         }
                         else
                         {
-                            MessageBox.Show("The ID Entered is not recognised by our system please try again!");
+                            MessageBox.Show("The ID Entered is not recognised by our system please try again!"); //Flags non existent vehicles
                             LockOut = true;
                         }
                         if (MoreInfoCheckBox.Checked && !LockOut)
@@ -110,7 +113,7 @@ namespace RentalSystem
                             string RentStatus;
                             if (CurrentUser.UserVehicle.CurrentlyRented)
                             {
-                                RentStatus = "***THIS VEHICLE IS NOT AVAILABLE FOR RENT AT THIS CURRENT TIME!";
+                                RentStatus = "***THIS VEHICLE IS NOT AVAILABLE FOR RENT AT THIS CURRENT TIME!"; //Shows if vehicle is available
                             }
                             else
                             {

@@ -16,24 +16,24 @@ public class DataQuery : DataController
     protected string Query;
     public DataQuery(string CurrentQuery)
     {
-        Query = CurrentQuery;
+        Query = CurrentQuery; //Query passed as parameters
     }
 
-    protected void ExecuteQuery()
+    protected void ExecuteQuery() //Used for value related searches
     {
         OleDbCommand Command = GetCommand();
         try
         {
-            QueryResult = (string?)Command.ExecuteScalar();
+            QueryResult = (string?)Command.ExecuteScalar(); //If null or non string, catch clause is activated
         }
         catch
         {
-            QueryResultException = (int?)Command.ExecuteScalar();
+            QueryResultException = (int?)Command.ExecuteScalar(); //If still null error stance is returned (SEE BELOW)
         }
         Connection.Close();
     }
 
-    private OleDbCommand GetCommand()
+    private OleDbCommand GetCommand() //Creates the SQL command and returns it
     {
         OleDbCommand Command = new OleDbCommand(DataSource);
         Connection.Open();
@@ -43,21 +43,21 @@ public class DataQuery : DataController
         return Command;
     }
 
-    public void NonQuery()
+    public void NonQuery() //Used for INSERT, UPDATE AND DELETE 
     {
         OleDbCommand Command = GetCommand();
         Command.ExecuteNonQuery();
         Connection.Close();
     }
-    public string GetResult()
+    public string GetResult() //Returns query results
     {
         ExecuteQuery();
         if (QueryResult != null)
-            return QueryResult;
+            return QueryResult; //String
         else if(QueryResultException != null)
-            return QueryResultException.ToString();
+            return QueryResultException.ToString(); //Int
         else
-            return "0";
+            return "0"; //Error thrown, value doesn't exist
         
     }
    

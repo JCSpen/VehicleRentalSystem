@@ -16,9 +16,14 @@ using System.Windows.Forms;
 
 public class DataController
 {
-    protected static string DataSource = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= " + Application.StartupPath + @"\MightyMotorsDB.accdb";
+    protected static string DataSource = "Provider=Microsoft.ACE.OLEDB.12.0;Data Source= " + Application.StartupPath + @"\MightyMotorsDB.accdb"; //Database source
     protected DataTable Table = new DataTable();
-    protected OleDbConnection Connection = new OleDbConnection(DataSource);
+    protected OleDbConnection Connection = new OleDbConnection(DataSource); //Connection
+
+
+    /*
+        Most of these methods are self explanatory, each method creates and passes a query into the SQL Handler methods (SEE BELOW)
+     */
     public void CreateUser(string Username, string Password, string FirstName, string LastName, string Insurance, int ID)
     {
         ExecuteNonQueryType("INSERT INTO Users([ID],Username,[Password],FirstName,LastName,InsuranceProvider) VALUES(" + ID + ",'" + Username + "','" + Password + "','" + FirstName + "','" + LastName + "','" + Insurance + "');");
@@ -47,13 +52,13 @@ public class DataController
     {
         return ExecuteNewQuery("SELECT InsuranceProvider FROM Users WHERE(ID = " + ID.ToString() + ");");
     }
-    public string ExecuteNewQuery(string Query)
+    public string ExecuteNewQuery(string Query) //Executes a search query via the SQL Handler class, query is passed from methods in this class
     {
         DataQuery NewQuery = new DataQuery(Query);
         return NewQuery.GetResult();
     }
 
-    public void ExecuteNonQueryType(string Query)
+    public void ExecuteNonQueryType(string Query) //Executes a non-search query via the SQL Handler class, query is passed from methods in this class
     {
         DataQuery NewQuery = new DataQuery(Query);
         NewQuery.NonQuery();
@@ -63,7 +68,7 @@ public class DataController
     {
         return ExecuteNewQuery("SELECT ID FROM Vehicle WHERE(ID = " + ID + ");");
     }
-    public void FillTable(DataGridView ListingViewer)
+    public void FillTable(DataGridView ListingViewer) //Fills the datatable on the main form
     {
         Table.Clear();
         if (ListingViewer != null)
@@ -80,7 +85,7 @@ public class DataController
         Connection.Close();
     }
 
-    public string[] FetchVehicleData(int ID)
+    public string[] FetchVehicleData(int ID) //Fetches all information about a vehicle and stores it in an array
     {
         string query = "SELECT * FROM Vehicle WHERE(ID = " + ID + ");";
         if (FindVehicleID(ID) != "0")

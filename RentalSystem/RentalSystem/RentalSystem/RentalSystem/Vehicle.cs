@@ -5,6 +5,10 @@ using System.Text;
 using System.Threading.Tasks;
 public class Vehicle
     {
+    /*
+     Each user holds an instance of a vehicle. For example if a user looks at a vehicle in detail, the information is saved locally so that it does not
+    need to be fetched should they decide to rent it. Low level version of using a Cache.
+     */
     public int ID;
     public string Make;
     public string Model;
@@ -15,11 +19,11 @@ public class Vehicle
     public string RenteeName;
 
 
-    public void RentVehicle(DataController Controller, string Username)
+    public void RentVehicle(DataController Controller, string Username) //Rents a vehicle
     {
         CurrentlyRented = Controller.RentVehicle(ID, Username);
     }
-    public void SetVehicleData(string[] Info, DataController Controller)
+    public void SetVehicleData(string[] Info, DataController Controller) //Sets values into an Array
     {
         ID = int.Parse(Info[0]);
         Make = Info[1];
@@ -30,7 +34,7 @@ public class Vehicle
         CurrentlyRented = GetRentalStatus(Controller);
     }
 
-    private bool GetRentalStatus(DataController Controller)
+    private bool GetRentalStatus(DataController Controller) //Gets the rental status of a vehicle
     {
         return Controller.CheckRentalStatus(ID);
     }

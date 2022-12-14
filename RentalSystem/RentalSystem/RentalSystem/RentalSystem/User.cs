@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
     public class User
     {
+    //All values held for the current user
     public string Username;
     public string Password;
     public string FirstName;
